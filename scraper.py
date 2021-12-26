@@ -12,15 +12,22 @@ def get_driver():
   driver = webdriver.Chrome(options=chrome_options)
   return driver
 
-if __name__ == "__main__":
-  print('Creating Driver')
-  driver = get_driver()
-
-  print('Fetching the Page')
-  driver.get(YOUTUBE_TRENDING_URL)
-
-  print('Getting the Video Divs')
+def get_videos(driver):
   VIDEO_DIV_TAG = 'ytd-video-renderer'
-  get_video_divs = driver.find_elements(By.TAG_NAME, VIDEO_DIV_TAG)
+  driver.get(YOUTUBE_TRENDING_URL)
+  videos = driver.find_elements(By.TAG_NAME, VIDEO_DIV_TAG)
+  return videos
 
-  print(f'Found {len(get_video_divs)} Videos')
+if __name__ == "__main__":
+  driver = get_driver()
+  videos = get_videos(driver)
+  
+  video = videos[0]
+  title_tag = video.find_element(By.ID, 'video-title')
+  
+  title = title_tag.text
+  url = title_tag.get_attribute('href')
+
+  print(f'Found {len(videos)} Videos')
+  print('First Video Title: ', title)
+  print('First Video URL: ', url)
