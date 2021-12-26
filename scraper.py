@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import pandas as pd
+import pyshorteners as p
 
 YOUTUBE_TRENDING_URL = 'https://www.youtube.com/feed/trending'
 
@@ -23,9 +24,12 @@ def parse_videos(video):
   title_tag = video.find_element(By.ID, 'video-title')
   title = title_tag.text
   url = title_tag.get_attribute('href')
+  url_s = p.Shortener().clckru.short(url)
+
 
   thumbnail_tag = video.find_element(By.TAG_NAME, 'img')
   thumbnail_url = thumbnail_tag.get_attribute('src')
+  thumbnail_url_s = p.Shortener().clckru.short(thumbnail_url)
 
   channel_div = video.find_element(By.CLASS_NAME, 'ytd-channel-name')
   channel_name = channel_div.text
@@ -33,8 +37,8 @@ def parse_videos(video):
   description = video.find_element(By.ID, 'description-text').text
   return {
     'Title': title,
-    'URL': url,
-    'Thumbnail': thumbnail_url,
+    'URL': url_s,
+    'Thumbnail': thumbnail_url_s,
     'Channel': channel_name,
     'Description': description
   }
